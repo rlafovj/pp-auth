@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: api
+  jwt:
+    iss: tetrips.co.kr
+    exp: 3600
+    secret: qwerty
+
