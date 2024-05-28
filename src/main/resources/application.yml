@@ -3,6 +3,7 @@ spring:
     name: api
   jwt:
     iss: tetrips.co.kr
-    exp: 3600
+    acc-exp: 36000000
+    ref-exp: 25920000000
     secret: qwerty
 

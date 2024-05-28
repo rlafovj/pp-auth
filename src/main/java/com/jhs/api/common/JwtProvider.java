@@ -20,30 +20,46 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtProvider {
-  @Value("${jwt.iss}")
-  private String issuer;
-
-  @Value("${jwt.exp}")
-  private Long expiration;
-
+  private final String issuer;
+  private final Long accessExpiredDate;
+  private final Long refreshExpiredDate;
   private final SecretKey secretKey;
 
   Instant expiredDate = Instant.now().plus(1, ChronoUnit.DAYS);
 
-  public JwtProvider(@Value("${jwt.secret}") String secretKey) {
-    this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
+  public JwtProvider(
+    @Value("${jwt.iss}") String issuer,
+    @Value("${jwt.acc-exp}") Long accessExpiration,
+    @Value("${jwt.ref-exp}") Long refreshExpiration,
+    @Value("${jwt.secret}") String secret) {
+    this.issuer = issuer;
+    this.accessExpiredDate = accessExpiration;
+    this.refreshExpiredDate = refreshExpiration;
+    this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret));
   }
 
-  public String createToken(UserDTO dto) {
+  public String createAccessToken(UserDTO user) {
     String token = Jwts.builder()
             .issuer(issuer)
             .signWith(secretKey)
-            .expiration(Date.from(expiredDate))
-            .subject("user Auth")
-            .claim("userEmail", dto.getEmail())
-            .claim("userId", dto.getId())
+            .expiration(Date.from(Instant.now().plus(accessExpiredDate, ChronoUnit.MILLIS)))
+            .subject("access")
+            .claim("userEmail", user.getEmail())
+            .claim("userId", user.getId())
             .compact();
-    log.info("로그인성공으로 발급된 토큰 : " + token);
+    log.info("발급된 엑세스토큰 : " + token);
+    return token;
+  }
+  public String createRefreshToken(UserDTO user) {
+    String token = Jwts.builder()
+            .issuer(issuer)
+            .signWith(secretKey)
+            .expiration(Date.from(Instant.now().plus(refreshExpiredDate, ChronoUnit.MILLIS)))
+            .subject("refresh")
+            .claim("userEmail", user.getEmail())
+            .claim("userId", user.getId())
+            .compact();
+    log.info("발급된 리프레쉬토큰 : " + token);
     return token;
   }
 
