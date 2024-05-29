@@ -4,6 +4,8 @@ import com.tetrips.api.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -27,13 +29,13 @@ public class User {
   private boolean gender;
 
   @Column(name = "BIRTH_DATE", nullable = true)
-  private String birthDate;
+  private LocalDate birthDate;
 
   @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
   private Token token;
 
   @Builder(builderMethodName = "builder")
-  public User(Long id, String email, String password, String nickname, boolean gender, String birthDate){
+  public User(Long id, String email, String password, String nickname, boolean gender, LocalDate birthDate){
     this.id = id;
     this.email = email;
     this.password = password;

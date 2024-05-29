@@ -21,7 +21,7 @@ public class Token {
   private String refreshToken;
 
   @Column(name = "EXP_DATE", nullable = false)
-  private String expDate;
+  private Long expDate;
 
   @OneToOne
   @JoinColumn(name = "USER_ID", nullable = false)
