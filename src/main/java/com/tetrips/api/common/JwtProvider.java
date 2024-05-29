@@ -25,8 +25,6 @@ public class JwtProvider {
   private final Long refreshExpiredDate;
   private final SecretKey secretKey;
 
-  Instant expiredDate = Instant.now().plus(1, ChronoUnit.DAYS);
-
   public JwtProvider(
     @Value("${jwt.iss}") String issuer,
     @Value("${jwt.acc-exp}") Long accessExpiration,
