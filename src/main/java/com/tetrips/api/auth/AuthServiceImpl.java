@@ -1,8 +1,8 @@
-package com.jhs.api.auth;
+package com.tetrips.api.auth;
 
-import com.jhs.api.common.MessengerVO;
-import com.jhs.api.user.UserDTO;
-import com.jhs.api.user.UserRepository;
+import com.tetrips.api.common.MessengerVO;
+import com.tetrips.api.user.UserDTO;
+import com.tetrips.api.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

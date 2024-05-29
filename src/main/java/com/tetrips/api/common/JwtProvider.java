@@ -1,7 +1,7 @@
-package com.jhs.api.common;
+package com.tetrips.api.common;
 
 
-import com.jhs.api.user.UserDTO;
+import com.tetrips.api.user.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

@@ -1,4 +1,4 @@
-package com.jhs.api.common;
+package com.tetrips.api.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

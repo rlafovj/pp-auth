@@ -1,4 +1,4 @@
-package com.jhs.api.auth;
+package com.tetrips.api.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;

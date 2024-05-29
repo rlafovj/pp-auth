@@ -1,4 +1,4 @@
-package com.jhs.api.user;
+package com.tetrips.api.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

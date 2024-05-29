@@ -1,4 +1,4 @@
-package com.jhs.api.user;
+package com.tetrips.api.user;
 
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;

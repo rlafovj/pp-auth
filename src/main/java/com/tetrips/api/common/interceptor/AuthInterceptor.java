@@ -1,7 +1,7 @@
-package com.jhs.api.common.interceptor;
+package com.tetrips.api.common.interceptor;
 
-import com.jhs.api.common.JwtProvider;
-import com.jhs.api.user.UserRepository;
+import com.tetrips.api.common.JwtProvider;
+import com.tetrips.api.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
