@@ -25,8 +25,8 @@ public class AuthInterceptor implements HandlerInterceptor {
             .filter(i -> !i.equals("undefined token"))
             .peek(token -> log.info("1- 인터셉터 토큰 로그 Bearer 포함 : {}", token))
             .map(i -> jwtProvider.getPayload(i).get("userEmail", String.class))
-            .map(email -> userRepository.findByEmail(email))
-            .filter(i -> i.isPresent())
+            .map(email -> userRepository.findUserByEmail(email))
+            //.filter(i -> i.isPresent())
             .peek(email -> log.info("2- 인터셉트사용자 Email : {}", email))
             .findFirst()
             .isPresent();

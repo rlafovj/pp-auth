@@ -1,5 +1,7 @@
 package com.tetrips.api.user;
 
+import com.querydsl.core.annotations.QueryProjection;
+import com.tetrips.api.token.Token;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,9 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Builder
 @Log4j2
@@ -20,6 +23,17 @@ public class UserDTO {
   private String password;
   private String nickname;
   private boolean gender;
-  private String birthDate;
-  private String token;
+  private LocalDate birthDate;
+  private Token token;
+
+  @QueryProjection
+  public UserDTO(Long id, String email, String password, String nickname, boolean gender, LocalDate birthDate, Token token) {
+    this.id = id;
+    this.email = email;
+    this.password = password;
+    this.nickname = nickname;
+    this.gender = gender;
+    this.birthDate = birthDate;
+    this.token = token;
+  }
 }

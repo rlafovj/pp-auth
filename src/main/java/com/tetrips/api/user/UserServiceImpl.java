@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MessengerVO login(UserDTO param) {
         return Stream.of(param)
-                .map(i -> userRepository.findByEmail(i.getEmail()))
+                .map(i -> userRepository.findUserByEmail(i.getEmail()))
                 .filter(i -> i.isPresent())
                 .map(i -> i.get().getPassword().equals(param.getPassword()))
                 .map(i -> i ? "SUCCESS" : "FAIL")
