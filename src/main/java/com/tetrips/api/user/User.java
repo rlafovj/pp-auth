@@ -1,5 +1,6 @@
 package com.tetrips.api.user;
 
+import com.tetrips.api.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,9 @@ public class User {
 
   @Column(name = "BIRTH_DATE", nullable = true)
   private String birthDate;
+
+  @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
+  private Token token;
 
   @Builder(builderMethodName = "builder")
   public User(Long id, String email, String password, String nickname, boolean gender, String birthDate){
