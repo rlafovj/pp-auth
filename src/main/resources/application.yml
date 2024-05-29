@@ -1,9 +1,37 @@
 spring:
   application:
     name: api
-  jwt:
-    iss: tetrips.co.kr
-    acc-exp: 36000000
-    ref-exp: 25920000000
-    secret: qwerty
+  datasource:
+    url: jdbc:mysql://localhost:3306/ppauthdb
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        format_sql: true
+    show-sql: true
+    defer-datasource-initialization: true
+    open-in-view: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:testData.sql
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type: trace
+jwt:
+  iss: tetrips.co.kr
+  acc-exp: 36000000
+  ref-exp: 25920000000
+  secret: qwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwertyqwerty
 

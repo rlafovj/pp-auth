@@ -1,14 +1,12 @@
 package com.jhs.api.user;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
+@Entity(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString(exclude = {"id"})
 public class User {
   @Id
   @Column(name = "ID", nullable = false)
@@ -21,17 +19,21 @@ public class User {
   @Column(name = "PASSWORD")
   private String password;
 
+  @Column(name = "NICKNAME")
+  private String nickname;
+
   @Column(name = "GENDER", nullable = true)
   private boolean gender;
 
-  @Column(name = "BIIRTH_DATE", nullable = true)
+  @Column(name = "BIRTH_DATE", nullable = true)
   private String birthDate;
 
   @Builder(builderMethodName = "builder")
-  public User(Long id, String email, String password, boolean gender, String birthDate){
+  public User(Long id, String email, String password, String nickname, boolean gender, String birthDate){
     this.id = id;
     this.email = email;
     this.password = password;
+    this.nickname = nickname;
     this.gender = gender;
     this.birthDate = birthDate;
   }
