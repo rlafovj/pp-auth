@@ -27,7 +27,7 @@ public interface UserService {
   }
   MessengerVO signup(UserDTO param);
   MessengerVO login(UserDTO param);
-  MessengerVO logout(UserDTO param);
+  MessengerVO logout(String token);
   User deleteToken(User user);
 
 

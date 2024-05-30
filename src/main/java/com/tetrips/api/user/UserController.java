@@ -27,9 +27,9 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<MessengerVO> logout(@RequestBody UserDTO param) {
-        log.info("logout: {}", param);
-        return ResponseEntity.ok(userService.logout(param));
+    public ResponseEntity<MessengerVO> logout(@RequestHeader("Authorization") String token) {
+        log.info("logout: {}", token);
+        return ResponseEntity.ok(userService.logout(token));
     }
 
 }
