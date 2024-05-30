@@ -31,6 +31,7 @@ public class User {
   @Column(name = "BIRTH_DATE", nullable = true)
   private LocalDate birthDate;
 
+  @Setter
   @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
   private Token token;
 

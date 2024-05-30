@@ -2,10 +2,10 @@ package com.tetrips.api.user;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserQueryDSL {
-  List<UserDTO> findUserByEmail(String email);
+  Optional<User> findUserByEmail(String email);
   boolean existsByEmail(String email);
 }

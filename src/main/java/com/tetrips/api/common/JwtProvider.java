@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -68,24 +70,42 @@ public class JwtProvider {
     }else {return "undefined token";}
   }
 
-  public void printPayload(String AccessToken) {
+  public void printPayload(String Token) {
     Base64.Decoder decoder = Base64.getDecoder();
 
-    String[] chunk = AccessToken.split("\\.");
+    String[] chunk = Token.split("\\.");
     String payload = new String(decoder.decode(chunk[1]));
     String header = new String(decoder.decode(chunk[0]));
 
-    log.info("AccessToken Header : "+header);
-    log.info("AccessToken Payload : "+payload);
+    log.info("Token Header : "+header);
+    log.info("Token Payload : "+payload);
 
     //return payload;
   }
 
-  public Claims getPayload(String accessToken) {
+  public Claims getPayload(String token) {
 //    Jws<Claims> claimsJws = Jwts.parser().verifyWith(secretKey).build()
 //            .parseSignedClaims(accessToken);
 //    String IDstr = claimsJws.getPayload().getId();
 //    log.info("Jwt 프로바이더 Access Token ID : "+IDstr);
-    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(accessToken).getPayload();
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+  }
+
+  public Long getExpiration() {
+    return Instant.now().plus(refreshExpiredDate, ChronoUnit.MILLIS).toEpochMilli();
+  }
+
+  public Boolean validateToken(String token, String subject) {
+    try {
+      return Stream.of(Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token))
+              .filter(i -> i.getPayload().getSubject().equals(subject))
+              .filter(i -> i.getPayload().getIssuer().equals(issuer))
+              .filter(i -> i.getPayload().getExpiration().after(Date.from(Instant.now())))
+              .map(i -> true)
+              .findAny()
+              .orElseGet(() -> false);
+    } catch (Exception e) {
+      return false;
+    }
   }
 }

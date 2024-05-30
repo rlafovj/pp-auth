@@ -2,15 +2,14 @@ package com.tetrips.api.token;
 
 import com.tetrips.api.user.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity(name = "TOKENS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @ToString(exclude = {"id"})
+@Builder
 public class Token {
   @Id
   @Column(name = "ID", nullable = false)
@@ -23,7 +22,7 @@ public class Token {
   @Column(name = "EXP_DATE", nullable = false)
   private Long expDate;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_ID", nullable = false)
   private User userId;
 }
