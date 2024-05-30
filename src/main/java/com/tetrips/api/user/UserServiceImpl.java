@@ -4,6 +4,7 @@ import com.tetrips.api.common.JwtProvider;
 import com.tetrips.api.common.MessengerVO;
 import com.tetrips.api.token.TokenRepository;
 import com.tetrips.api.token.Token;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,27 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final JwtProvider jwtProvider;
+
+    @Override
+    @Transactional
+    public MessengerVO signup(UserDTO param) {
+        return Stream.of(param)
+                .filter(i -> !userRepository.existsByEmail(i.getEmail()))
+                .map(i -> userRepository.save(User.builder()
+                        .email(i.getEmail())
+                        .password(i.getPassword())
+                        .nickname(i.getNickname())
+                        .gender(i.isGender())
+                        .birthDate(i.getBirthDate())
+                        .build()))
+                .map(i -> MessengerVO.builder()
+                        .message("SUCCESS")
+                        .build())
+                .findAny()
+                .orElseGet(() -> MessengerVO.builder()
+                        .message("FAIL")
+                        .build());
+    }
 
     @Override
     public MessengerVO login(UserDTO param) {
@@ -55,6 +77,15 @@ public class UserServiceImpl implements UserService {
         jwtProvider.printPayload(accessToken);
         jwtProvider.printPayload(refreshToken);
 
+        if (flag) {
+            Token token = Token.builder()
+                    .userId(user)
+                    .expDate(jwtProvider.getRefreshExpired())
+                    .refreshToken(refreshToken)
+                    .build();
+            tokenRepository.save(token);
+        }
+
         return MessengerVO.builder()
                 .message(flag ? "SUCCESS" : "FAIL")
                 .accessToken(flag ? accessToken : null)
@@ -68,6 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User deleteToken(User user) {
         return Stream.of(user)
                 .filter(i -> i.getToken() != null)

@@ -25,7 +25,10 @@ public interface UserService {
             .birthDate(userDTO.getBirthDate())
             .build();
   }
+  MessengerVO signup(UserDTO param);
   MessengerVO login(UserDTO param);
   MessengerVO logout(UserDTO param);
   User deleteToken(User user);
+
+
 }

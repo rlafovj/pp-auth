@@ -91,7 +91,7 @@ public class JwtProvider {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
   }
 
-  public Long getExpiration() {
+  public Long getRefreshExpired() {
     return Instant.now().plus(refreshExpiredDate, ChronoUnit.MILLIS).toEpochMilli();
   }
 
