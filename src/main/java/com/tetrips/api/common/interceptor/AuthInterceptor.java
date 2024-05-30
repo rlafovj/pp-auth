@@ -24,12 +24,13 @@ public class AuthInterceptor implements HandlerInterceptor {
             .map(i -> jwtProvider.extractTokenFromHeader(i))
             .filter(i -> !i.equals("undefined token"))
             .peek(token -> log.info("1- 인터셉터 토큰 로그 Bearer 포함 : {}", token))
-            //vaildate 토큰 검증 시퀀스 추가 필요
+            .filter(i -> jwtProvider.validateToken(i, "access"))
             .map(i -> jwtProvider.getPayload(i).get("userEmail", String.class))
             .map(email -> userRepository.findUserByEmail(email))
-            //.filter(i -> i.isPresent())
+            .filter(i -> i.isPresent())
             .peek(email -> log.info("2- 인터셉트사용자 Email : {}", email))
             .findFirst()
             .isPresent();
+
 }
 }
