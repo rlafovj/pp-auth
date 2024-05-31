@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MessengerVO logout(String token) {
         return Stream.of(token)
+                .map(i -> i.substring(7))
                 .map(i -> jwtProvider.getPayload(i).get("userId", Long.class))
                 .map(i -> userRepository.findById(i).orElseGet(User::new).getToken().getId())
                 .filter(i -> tokenRepository.findById(i).isPresent())
