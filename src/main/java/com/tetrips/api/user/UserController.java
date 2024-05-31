@@ -25,7 +25,7 @@ public class UserController {
         log.info("login: {}", param);
         return ResponseEntity.ok(userService.login(param));
     }
-//토큰 복호화 후 getPayload 하여 사용자 id 추출
+//logout은 내부 상태가 변하므로 GetMapping이 아닌 PostMapping으로 변경 필요
     @GetMapping("/logout")
     public ResponseEntity<MessengerVO> logout(@RequestHeader("Authorization") String token) {
         log.info("logout: {}", token);
