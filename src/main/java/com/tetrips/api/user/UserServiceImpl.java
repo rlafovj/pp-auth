@@ -143,4 +143,17 @@ public class UserServiceImpl implements UserService {
                 .findFirst()
                 .get();
     }
+
+    @Override
+    public MessengerVO existsEmail(String email) {
+        return userRepository.existsByEmail(email) ?
+                MessengerVO.builder()
+                        .message("SUCCESS")
+                        .status(200)
+                        .build() :
+                MessengerVO.builder()
+                        .message("FAIL")
+                        .status(409)//duplicate email
+                        .build();
+    }
 }

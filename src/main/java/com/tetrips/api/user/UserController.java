@@ -31,5 +31,10 @@ public class UserController {
         log.info("logout: {}", token);
         return ResponseEntity.ok(userService.logout(token));
     }
+    @GetMapping("/exists-email")
+    public ResponseEntity<MessengerVO> existsEmail(@RequestParam String email) {
+        log.info("existsEmail: {}", email);
+        return ResponseEntity.ok(userService.existsEmail(email));
+    }
 
 }

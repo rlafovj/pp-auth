@@ -31,4 +31,5 @@ public interface UserService {
   User deleteToken(User user);
 
 
+  MessengerVO existsEmail(String email);
 }
