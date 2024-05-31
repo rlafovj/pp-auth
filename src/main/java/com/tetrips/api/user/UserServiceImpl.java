@@ -33,10 +33,12 @@ public class UserServiceImpl implements UserService {
                         .build()))
                 .map(i -> MessengerVO.builder()
                         .message("SUCCESS")
+                        .status(200)
                         .build())
                 .findAny()
                 .orElseGet(() -> MessengerVO.builder()
                         .message("FAIL")
+                        .status(409)//duplicate email
                         .build());
     }
 
@@ -68,47 +70,66 @@ public class UserServiceImpl implements UserService {
 //                .orElseGet(() -> MessengerVO.builder()
 //                        .message("FAIL")
 //                        .build());
-        User user = userRepository.findUserByEmail(param.getEmail()).orElseGet(() -> User.builder().build());
-        boolean flag = user.getPassword().equals(param.getPassword());
+        try {
+            User user = userRepository.findUserByEmail(param.getEmail()).orElseGet(() -> User.builder().build());
+            boolean flag = user.getPassword().equals(param.getPassword());
 
-        String accessToken = jwtProvider.createAccessToken(entityToDTO(user));
-        String refreshToken = jwtProvider.createRefreshToken(entityToDTO(user));
+            String accessToken = jwtProvider.createAccessToken(entityToDTO(user));
+            String refreshToken = jwtProvider.createRefreshToken(entityToDTO(user));
 
-        jwtProvider.printPayload(accessToken);
-        jwtProvider.printPayload(refreshToken);
+            jwtProvider.printPayload(accessToken);
+            jwtProvider.printPayload(refreshToken);
 
-        if (flag) {
-            Token token = Token.builder()
-                    .userId(user)
-                    .expDate(jwtProvider.getRefreshExpired())
-                    .refreshToken(refreshToken)
+            if (flag) {
+                Token token = Token.builder()
+                        .userId(user)
+                        .expDate(jwtProvider.getRefreshExpired())
+                        .refreshToken(refreshToken)
+                        .build();
+                tokenRepository.save(token);
+            }
+
+            return MessengerVO.builder()
+                    .message(flag ? "SUCCESS" : "FAIL")
+                    .accessToken(flag ? accessToken : null)
+                    .refreshToken(flag ? refreshToken : null)
+                    .status(flag ? 200 : 401)
                     .build();
-            tokenRepository.save(token);
+        }catch (Exception e) {
+            log.info("로그인 실패 : " + e.getMessage());
+            return MessengerVO.builder()
+                    .message("FAIL")
+                    .status(500)
+                    .build();
         }
-
-        return MessengerVO.builder()
-                .message(flag ? "SUCCESS" : "FAIL")
-                .accessToken(flag ? accessToken : null)
-                .refreshToken(flag ? refreshToken : null)
-                .build();
     }
 
     @Override
     public MessengerVO logout(String token) {
-        return Stream.of(token)
-                .map(i -> i.substring(7))
-                .map(i -> jwtProvider.getPayload(i).get("userId", Long.class))
-                .map(i -> userRepository.findById(i).orElseGet(User::new).getToken().getId())
-                .filter(i -> tokenRepository.findById(i).isPresent())
-                .map(i -> tokenRepository.findById(i))
-                .peek(i -> tokenRepository.deleteById(i.get().getId()))
-                .map(i -> MessengerVO.builder()
-                        .message("SUCCESS")
-                        .build())
-                .findAny()
-                .orElseGet(() -> MessengerVO.builder()
-                        .message("FAIL")
-                        .build());
+        try {
+            return Stream.of(token)
+                    .map(i -> i.substring(7))
+                    .map(i -> jwtProvider.getPayload(i).get("userId", Long.class))
+                    .map(i -> userRepository.findById(i).orElseGet(User::new).getToken().getId())
+                    .filter(i -> tokenRepository.findById(i).isPresent())
+                    .map(i -> tokenRepository.findById(i))
+                    .peek(i -> tokenRepository.deleteById(i.get().getId()))
+                    .map(i -> MessengerVO.builder()
+                            .message("SUCCESS")
+                            .status(200)
+                            .build())
+                    .findAny()
+                    .orElseGet(() -> MessengerVO.builder()
+                            .message("FAIL")
+                            .status(401)
+                            .build());
+        }catch (Exception e) {
+            log.info("로그아웃 실패 : " + e.getMessage());
+            return MessengerVO.builder()
+                    .message("FAIL")
+                    .status(500)//invalid token
+                    .build();
+        }
     }
 
     @Override
