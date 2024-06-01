@@ -3,7 +3,6 @@ package com.tetrips.api.user;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -14,16 +13,6 @@ public class UserQueryDSLImpl implements UserQueryDSL{
   public Optional<User> findUserByEmail(String email) {
     QUser qUser = QUser.user;
     return Optional.ofNullable(factory.selectFrom(qUser)
-//                    new QUserDTO(
-//                            qUser.id,
-//                            qUser.email,
-//                            qUser.password,
-//                            qUser.nickname,
-//                            qUser.gender,
-//                            qUser.birthDate,
-//                            qUser.token
-//                    ))
-//            .from(qUser)
             .where(qUser.email.eq(email))
             .fetchFirst());
   }
