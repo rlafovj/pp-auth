@@ -44,32 +44,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MessengerVO login(UserDTO param) {
-//        return Stream.of(param)
-//                .map(i -> userRepository.findUserByEmail(i.getEmail()).orElseGet(() -> User.builder().build()))
-//                .filter(i -> i.getId() != null)
-//                .filter(i -> i.getPassword().equals(param.getPassword()))
-//                .map(i -> deleteToken(i))
-//                .peek(i -> i.setToken(tokenRepository.save(Token.builder()
-//                                .userId(i)
-//                                .expDate(jwtProvider.getExpiration())
-//                                .refreshToken(jwtProvider.createRefreshToken(UserDTO.builder()
-//                                                .email(i.getEmail())
-//                                                .id(i.getId())
-//                                                .build()))
-//                                .build())))
-//                .map(i -> userRepository.save(i))
-//                .map(i -> MessengerVO.builder()
-//                        .message("SUCCESS")
-//                        .refreshToken(i.getToken().getRefreshToken())
-//                        .accessToken(jwtProvider.createAccessToken(UserDTO.builder()
-//                                .email(i.getEmail())
-//                                .id(i.getId())
-//                        .build()))
-//                        .build())
-//                .findFirst()
-//                .orElseGet(() -> MessengerVO.builder()
-//                        .message("FAIL")
-//                        .build());
         try {
             User user = userRepository.findUserByEmail(param.getEmail()).orElseGet(() -> User.builder().build());
             boolean flag = user.getPassword().equals(param.getPassword());
