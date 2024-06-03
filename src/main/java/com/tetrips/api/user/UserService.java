@@ -1,6 +1,6 @@
 package com.tetrips.api.user;
 
-import com.tetrips.api.common.MessengerVO;
+import com.tetrips.api.common.security.domain.MessengerVO;
 
 public interface UserService {
 

@@ -1,7 +1,7 @@
 package com.tetrips.api.user;
 
 import com.tetrips.api.common.JwtProvider;
-import com.tetrips.api.common.MessengerVO;
+import com.tetrips.api.common.security.domain.MessengerVO;
 import com.tetrips.api.token.TokenRepository;
 import com.tetrips.api.token.Token;
 import jakarta.transaction.Transactional;

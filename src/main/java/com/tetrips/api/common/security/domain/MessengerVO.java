@@ -1,4 +1,4 @@
-package com.tetrips.api.common;
+package com.tetrips.api.common.security.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
