@@ -1,5 +1,5 @@
 //package com.tetrips.api.common.security.domain;
-//
+//JwtProvider와 같은 역할
 //import jakarta.annotation.PostConstruct;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
