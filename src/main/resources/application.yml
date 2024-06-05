@@ -29,6 +29,14 @@ logging:
       hibernate:
         SQL: debug
         type: trace
+      springframework:
+        security: debug
+        web: debug
+        data: debug
+        hibernate: debug
+        jpa: debug
+        sql: debug
+        jwt: debug
 jwt:
   iss: tetrips.co.kr
   acc-exp: 36000000

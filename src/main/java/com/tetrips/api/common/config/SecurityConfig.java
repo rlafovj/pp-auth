@@ -1,20 +1,83 @@
 package com.tetrips.api.common.config;
-
-import com.tetrips.api.common.security.domain.SecurityProvider;
-import com.tetrips.api.common.security.filter.SecurityFilter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.tetrips.api.common.security.filter.CustomRequestFilter;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-  private final SecurityProvider provider;
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+  // 개발자가 기획에 따라 커스터마이징 해야 함
+//    private final CustomRequestFilter jwtAuthenticationFilter ;
+//    private final UserDetailsService customerUserDetailsService ;
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    AuthenticationManagerBuilder managerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    AuthenticationManager manager = managerBuilder.build();
+    http.authenticationManager(manager);
 
-  @Override
-  public void configure(HttpSecurity builder) throws Exception {
-    SecurityFilter filter = new SecurityFilter(provider);
-    builder.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+    http
+      .csrf(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(authorizeRequest ->
+        authorizeRequest
+          .requestMatchers(
+                  AntPathRequestMatcher.antMatcher("/admin/**")
+          ).authenticated()
+          .requestMatchers(
+                  AntPathRequestMatcher.antMatcher("/**"),
+                  AntPathRequestMatcher.antMatcher("/error"),
+                  AntPathRequestMatcher.antMatcher("/api/login/**"),
+                  AntPathRequestMatcher.antMatcher("/api/join/**"),
+                  AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                  AntPathRequestMatcher.antMatcher("/swagger-resources/**"),
+                  AntPathRequestMatcher.antMatcher("/v3/api-docs/**")
+          ).permitAll()
+
+      )
+      //    .addFilterAt(
+      //            this.abstractAuthenticationProcessingFilter(manager),
+      //            UsernamePasswordAuthenticationFilter.class)
+      .headers(
+        headersConfigurer ->
+          headersConfigurer
+            .frameOptions(
+              HeadersConfigurer.FrameOptionsConfig::sameOrigin
+            )
+            .contentSecurityPolicy( policyConfig ->
+              policyConfig.policyDirectives(
+                    "script-src 'self'; " + "img-src 'self'; " +
+                                  "font-src 'self' data:; " + "default-src 'self'; " +
+                                      "frame-src 'self'"
+              )
+            )
+      );
+    return http.build();
   }
+  public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(final AuthenticationManager manager) {
+    // CustomRequestFilter filter = new CustomRequestFilter(
+    //        "/api/login",
+    //        manager
+    // );
+    CustomRequestFilter filter = null;
+    return null;
+  }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception
+  { return authenticationConfiguration.getAuthenticationManager();}
+  @Bean
+  public PasswordEncoder passwordEncoder()
+  { return new BCryptPasswordEncoder(); }
 }
