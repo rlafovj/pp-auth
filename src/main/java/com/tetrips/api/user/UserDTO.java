@@ -1,5 +1,6 @@
 package com.tetrips.api.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import com.tetrips.api.token.Token;
 import jakarta.persistence.Column;
@@ -23,6 +24,7 @@ public class UserDTO {
   private String password;
   private String nickname;
   private boolean gender;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate birthDate;
   private Token token;
 

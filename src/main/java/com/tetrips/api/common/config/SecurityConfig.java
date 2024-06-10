@@ -1,4 +1,5 @@
 package com.tetrips.api.common.config;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.tetrips.api.common.security.filter.CustomRequestFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -39,8 +41,8 @@ public class SecurityConfig {
           .requestMatchers(
                   AntPathRequestMatcher.antMatcher("/**"),
                   AntPathRequestMatcher.antMatcher("/error"),
-                  AntPathRequestMatcher.antMatcher("/api/login/**"),
-                  AntPathRequestMatcher.antMatcher("/api/join/**"),
+                  AntPathRequestMatcher.antMatcher("/api/user/login/**"),
+                  AntPathRequestMatcher.antMatcher("/api/user/signup/**"),
                   AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
                   AntPathRequestMatcher.antMatcher("/swagger-resources/**"),
                   AntPathRequestMatcher.antMatcher("/v3/api-docs/**")
@@ -58,12 +60,13 @@ public class SecurityConfig {
             )
             .contentSecurityPolicy( policyConfig ->
               policyConfig.policyDirectives(
-                    "script-src 'self'; " + "img-src 'self'; " +
+                    "script-src 'self'; " + "img-src 'self' data:; " +
                                   "font-src 'self' data:; " + "default-src 'self'; " +
                                       "frame-src 'self'"
               )
             )
       );
+
     return http.build();
   }
   public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(final AuthenticationManager manager) {
