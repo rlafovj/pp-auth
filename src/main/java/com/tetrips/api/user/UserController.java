@@ -1,5 +1,6 @@
 package com.tetrips.api.user;
 
+import com.tetrips.api.common.security.domain.LoginDTO;
 import com.tetrips.api.common.security.domain.MessengerVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MessengerVO> login(@RequestBody UserDTO param) {
+    public ResponseEntity<MessengerVO> login(@RequestBody LoginDTO param) {
         log.info("login: {}", param);
         return ResponseEntity.ok(userService.login(param));
     }

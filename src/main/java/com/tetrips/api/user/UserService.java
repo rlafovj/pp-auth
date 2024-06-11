@@ -1,5 +1,6 @@
 package com.tetrips.api.user;
 
+import com.tetrips.api.common.security.domain.LoginDTO;
 import com.tetrips.api.common.security.domain.MessengerVO;
 
 public interface UserService {
@@ -26,7 +27,7 @@ public interface UserService {
             .build();
   }
   MessengerVO signup(UserDTO param);
-  MessengerVO login(UserDTO param);
+  MessengerVO login(LoginDTO param);
   MessengerVO logout(String token);
   User deleteToken(User user);
 

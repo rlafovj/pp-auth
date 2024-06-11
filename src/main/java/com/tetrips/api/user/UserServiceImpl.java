@@ -1,6 +1,8 @@
 package com.tetrips.api.user;
 
 import com.tetrips.api.common.JwtProvider;
+import com.tetrips.api.common.config.SecurityConfig;
+import com.tetrips.api.common.security.domain.LoginDTO;
 import com.tetrips.api.common.security.domain.MessengerVO;
 import com.tetrips.api.token.TokenRepository;
 import com.tetrips.api.token.Token;
@@ -18,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final JwtProvider jwtProvider;
+    private final SecurityConfig securityConfig;
 
     @Override
     @Transactional
@@ -26,7 +29,7 @@ public class UserServiceImpl implements UserService {
                 .filter(i -> !userRepository.existsByEmail(i.getEmail()))
                 .map(i -> userRepository.save(User.builder()
                         .email(i.getEmail())
-                        .password(i.getPassword())
+                        .password(securityConfig.passwordEncoder().encode(i.getPassword()))
                         .nickname(i.getNickname())
                         .gender(i.isGender())
                         .birthDate(i.getBirthDate())
@@ -43,10 +46,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public MessengerVO login(UserDTO param) {
+    public MessengerVO login(LoginDTO param) {
         try {
             User user = userRepository.findUserByEmail(param.getEmail()).orElseGet(() -> User.builder().build());
-            boolean flag = user.getPassword().equals(param.getPassword());
+            boolean flag = securityConfig.passwordEncoder().matches(param.getPassword(), user.getPassword());
 
             String accessToken = jwtProvider.createAccessToken(entityToDTO(user));
             String refreshToken = jwtProvider.createRefreshToken(entityToDTO(user));
