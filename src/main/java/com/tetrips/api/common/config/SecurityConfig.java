@@ -22,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+  //Flux 방식으로 마이그레이션 필요함 240612
   // 개발자가 기획에 따라 커스터마이징 해야 함
 //    private final CustomRequestFilter jwtAuthenticationFilter ;
 //    private final UserDetailsService customerUserDetailsService ;
